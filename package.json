@@ -1,8 +1,9 @@
 {
   "name": "@gilfoyley/helpdesk-js",
-  "version": "0.0.8",
+  "version": "0.0.15",
   "description": "Package provide methods for interaction with helpdesk",
   "main": "index.js",
+  "module": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,6 +14,11 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/popcornrus/helpdesk-js.git"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./utils/api": "./utils/api.js",
+    "./utils/webscoket": "./utils/webscoket.js"
   },
   "keywords": [
     "tracking",

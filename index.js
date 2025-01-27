@@ -1,6 +1,6 @@
 import ApiChannel from './utils/api.js';
 import WebsocketChannel from './utils/websocket.js';
-import Tracker from './modules/tracker';
+import Tracker from './modules/tracker.js';
 
 class Helpdesk {
     constructor({
