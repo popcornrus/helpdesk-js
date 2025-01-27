@@ -1,5 +1,5 @@
-import ApiChannel from './utils/api';
-import WebsocketChannel from './utils/websocket';
+import Api from './utils/api.js';
+import Websocket from './utils/websocket.js';
 import Tracker from './modules/tracker';
 
 class Helpdesk {
@@ -21,12 +21,12 @@ class Helpdesk {
     async connect({
                       tracker = false
                   }) {
-        this.apiChannel = new ApiChannel({
+        this.apiChannel = new Api({
             baseUrl: this.backendUrl,
             token: this.apiToken
         });
 
-        this.websocketChannel = new WebsocketChannel({
+        this.websocketChannel = new Websocket({
             url: this.websocketUrl,
         });
 

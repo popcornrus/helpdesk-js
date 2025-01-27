@@ -1,6 +1,6 @@
 {
   "name": "@gilfoyley/helpdesk-js",
-  "version": "0.0.3",
+  "version": "0.0.8",
   "description": "Package provide methods for interaction with helpdesk",
   "main": "index.js",
   "type": "module",

@@ -8,8 +8,6 @@ class Tracker {
                 }) {
         this.api = apiChannel;
         this.ws = wsChannel;
-
-        this.connectRRWeb();
     }
 
     async connectRRWeb() {
@@ -21,6 +19,7 @@ class Tracker {
         await this.createTracker();
         const _self = this;
 
+        await this.connectRRWeb();
         this.record({
             emit(event) {
                 _self._trackerWebSocket(event);
@@ -32,8 +31,8 @@ class Tracker {
         this.api.post(`/trackers/create`, {
             browser: navigator.userAgent,
             screen: {
-                width: window.screen.width,
-                height: window.screen.height
+                width: document.documentElement.clientWidth,
+                height: document.documentElement.clientHeight
             },
             url: window.location.href,
             additional_info: []
