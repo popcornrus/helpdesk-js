@@ -1,70 +1,100 @@
 class Tracker {
-    accessible = false;
-    eventQueue = []; // Queue to store events
+    #accessible = {
+        apiReady: false,
+        wsReady: false,
+        startDelayComplete: false,
+    };
+    #eventQueue = []; // Queue to store events
+    #trackUuid = null;
+    #record = null;
 
-    constructor({
-                    apiChannel = null,
-                    wsChannel = null
-                }) {
-        this.api = apiChannel;
-        this.ws = wsChannel;
+    constructor({ api = null, ws = null }) {
+        this.api = api;
+        this.ws = ws;
     }
 
+    /**
+     * Dynamically imports the 'rrweb' library and initializes the record function.
+     */
     async connectRRWeb() {
-        const { record } = await import('rrweb');
-        this.record = record;
+        try {
+            const { record } = await import('rrweb');
+            this.#record = record;
+        } catch (error) {
+            console.error('Failed to load rrweb:', error);
+        }
     }
 
+    /**
+     * Starts the tracker by creating the tracker, connecting to rrweb, and setting up the recording.
+     */
     async start() {
-        await this.createTracker();
-        const _self = this;
+        try {
+            await this.connectRRWeb();
 
-        await this.connectRRWeb();
-        this.record({
-            emit(event) {
-                _self._trackerWebSocket(event);
-            }
-        });
+            this.#record?.({
+                emit: this.#trackerWebSocket.bind(this)
+            });
+            setTimeout(async () => {
+                this.#accessible.startDelayComplete = true;
+                await this.createTracker();
+                this.#flushQueue();
+            }, 5000);
+        } catch (error) {
+            console.error('Failed to start tracker:', error);
+        }
     }
 
+    /**
+     * Creates a tracker via the API and initializes the tracking UUID.
+     */
     async createTracker() {
-        this.api.post(`/trackers/create`, {
-            browser: navigator.userAgent,
-            screen: {
-                width: document.documentElement.clientWidth,
-                height: document.documentElement.clientHeight
-            },
-            url: window.location.href,
-            additional_info: []
-        }).then(({ data }) => {
-            this.trackUuid = data.data.uuid;
-            this.accessible = true;
-
-            // Flush the queue once accessible is true
-            this._flushQueue();
-        });
+        try {
+            const response = await this.api.post(`/trackers/create`, {
+                browser: navigator.userAgent,
+                screen: {
+                    width: document.documentElement.clientWidth,
+                    height: document.documentElement.clientHeight
+                },
+                url: window.location.href,
+                additional_info: []
+            });
+            this.#trackUuid = response.data.data.uuid;
+            this.#accessible.apiReady = true;
+            this.#flushQueue();
+        } catch (error) {
+            console.error('Failed to create tracker:', error);
+        }
     }
 
-    async _trackerWebSocket(data) {
-        if (!this.accessible) {
-            // If not accessible, add the event to the queue
-            this.eventQueue.push(data);
+    /**
+     * Sends tracking data via WebSocket or queues it if conditions are not met.
+     * @param {Object} data - The event data to be tracked.
+     */
+    async #trackerWebSocket(data) {
+        if (!this.#accessible.apiReady || !this.#accessible.wsReady || !this.#accessible.startDelayComplete) {
+            this.#eventQueue.push(data);
             return;
         }
 
-        // If accessible, send the event directly
-        this.ws.send(JSON.stringify({
-            channel: `tracking.${this.trackUuid}`,
-            event: 'update',
-            data: data
-        }));
+        try {
+            this.ws.send(JSON.stringify({
+                channel: `tracking.${this.#trackUuid}`,
+                event: 'update',
+                data: data
+            }));
+        } catch (error) {
+            console.error('Failed to send WebSocket message:', error);
+        }
     }
 
-    _flushQueue() {
-        // Send all queued events once accessible is true
-        while (this.eventQueue.length > 0) {
-            const event = this.eventQueue.shift(); // Remove the first event from the queue
-            this._trackerWebSocket(event); // Send the event
+    /**
+     * Flushes the event queue by sending all queued events.
+     */
+    #flushQueue() {
+        while (this.#eventQueue.length > 0) {
+            const event = this.#eventQueue.shift();
+            this.#trackerWebSocket(event);
         }
     }
 }

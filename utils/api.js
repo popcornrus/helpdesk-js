@@ -5,10 +5,18 @@ class Api {
     baseUrl = '',
     token = ''
   }) {
+    if (!baseUrl) {
+      throw new Error('Api: baseUrl is required');
+    }
+
+    if (!token) {
+      throw new Error('Api: token is required');
+    }
+
     this.axios = axios.create({
       baseURL: baseUrl,
       headers: {
-        'Authorization': `Bearer ${token}`
+        'X-Project-Token': `${token}`
       }
     });
   }

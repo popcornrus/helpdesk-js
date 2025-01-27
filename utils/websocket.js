@@ -1,8 +1,17 @@
 class WebsocketChannel {
 	constructor({
-								url = 'ws://localhost:3000',
-							}) {
-		this.socket = new WebSocket(`${url}`);
+		            baseUrl = '',
+								token = ''
+	            }) {
+		if (!baseUrl) {
+			throw new Error('WebsocketChannel: baseUrl is required');
+		}
+
+		if (!token) {
+			throw new Error('WebsocketChannel: token is required');
+		}
+
+		this.socket = new WebSocket(`${baseUrl}?token=${token}`);
 		this.socket.onopen = () => {
 			console.log('connected');
 		};

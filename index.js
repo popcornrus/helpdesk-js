@@ -1,42 +1,58 @@
 import ApiChannel from './utils/api.js';
 import WebsocketChannel from './utils/websocket.js';
+
 import Tracker from './modules/tracker.js';
 
 class Helpdesk {
-    constructor({
-                    backendUrl = 'http://localhost:3000',
-                    websocketUrl = 'ws://localhost:3000',
-                    apiToken = '1234567890'
+	constructor({
+		            backend = {baseUrl: '', token: ''},
+		            websocket = {baseUrl: '', token: ''},
+		            module: {
+			            tracker = false,
+		            }
+	            }) {
+		this.apiChannel = null;
+		this.websocketChannel = null;
+
+		this.connect({
+      api: backend,
+      websocket: websocket,
+    } ).then(r => {
+      this.integrateModules(module)
+    })
+	}
+
+	async connect({
+		              api: {
+			              baseUrl: backendUrl,
+			              token: apiToken
+		              },
+		              websocket: {
+			              baseUrl: websocketUrl,
+			              token: wsToken
+		              },
+	              }) {
+		this.apiChannel = new ApiChannel({
+			baseUrl: backendUrl,
+			token: apiToken,
+		});
+
+		this.websocketChannel = new WebsocketChannel({
+			baseUrl: websocketUrl,
+      token: wsToken,
+		});
+	}
+
+  async integrateModules({
+                  tracker = false,
                 }) {
-        this.apiChannel = null;
-        this.websocketChannel = null;
-
-        this.backendUrl = backendUrl;
-        this.websocketUrl = websocketUrl;
-        this.apiToken = apiToken;
-
-        this.tracker = null;
+    if (tracker) {
+      this.tracker = new Tracker({
+        api: this.apiChannel,
+        ws: this.websocketChannel,
+      });
     }
-
-    async connect({
-                      tracker = false
-                  }) {
-        this.apiChannel = new ApiChannel({
-            baseUrl: this.backendUrl,
-            token: this.apiToken
-        });
-
-        this.websocketChannel = new WebsocketChannel({
-            url: this.websocketUrl,
-        });
-
-        if (tracker) {
-            this.tracker = new Tracker({
-                apiChannel: this.apiChannel,
-                wsChannel: this.websocketChannel
-            });
-        }
-    }
+  }
 }
 
 export default Helpdesk;
