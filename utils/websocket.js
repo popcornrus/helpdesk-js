@@ -15,7 +15,7 @@ class WebsocketChannel {
 		this.socket.onopen = () => {
 			console.log('connected');
 		};
-		this.socket.onmessage = (event) => {
+		this.socket.onerror = (event) => {
 			console.log('message', event.data);
 		};
 	}

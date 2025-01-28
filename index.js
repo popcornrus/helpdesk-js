@@ -5,54 +5,21 @@ import Tracker from './modules/tracker.js';
 
 class Helpdesk {
 	constructor({
-		            backend = {baseUrl: '', token: ''},
-		            websocket = {baseUrl: '', token: ''},
-		            module: {
-			            tracker = false,
-		            }
-	            }) {
-		this.apiChannel = null;
-		this.websocketChannel = null;
+    backend = {baseUrl: '', token: ''},
+    websocket = {baseUrl: '', token: ''},
+  }) {
+		this.tracker = null;
 
-		this.connect({
-      api: backend,
-      websocket: websocket,
-    } ).then(r => {
-      this.integrateModules(module)
-    })
+		this.apiChannel = new ApiChannel(backend);
+		this.websocketChannel = new WebsocketChannel(websocket);
 	}
 
-	async connect({
-		              api: {
-			              baseUrl: backendUrl,
-			              token: apiToken
-		              },
-		              websocket: {
-			              baseUrl: websocketUrl,
-			              token: wsToken
-		              },
-	              }) {
-		this.apiChannel = new ApiChannel({
-			baseUrl: backendUrl,
-			token: apiToken,
-		});
-
-		this.websocketChannel = new WebsocketChannel({
-			baseUrl: websocketUrl,
-      token: wsToken,
+	async appendTrackerInstance() {
+		this.tracker = new Tracker({
+			api: this.apiChannel,
+			ws: this.websocketChannel,
 		});
 	}
-
-  async integrateModules({
-                  tracker = false,
-                }) {
-    if (tracker) {
-      this.tracker = new Tracker({
-        api: this.apiChannel,
-        ws: this.websocketChannel,
-      });
-    }
-  }
 }
 
 export default Helpdesk;

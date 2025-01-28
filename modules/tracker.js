@@ -1,7 +1,6 @@
 class Tracker {
     #accessible = {
         apiReady: false,
-        wsReady: false,
         startDelayComplete: false,
     };
     #eventQueue = []; // Queue to store events
@@ -35,10 +34,10 @@ class Tracker {
             this.#record?.({
                 emit: this.#trackerWebSocket.bind(this)
             });
+
             setTimeout(async () => {
                 this.#accessible.startDelayComplete = true;
                 await this.createTracker();
-                this.#flushQueue();
             }, 5000);
         } catch (error) {
             console.error('Failed to start tracker:', error);
@@ -50,7 +49,7 @@ class Tracker {
      */
     async createTracker() {
         try {
-            const response = await this.api.post(`/trackers/create`, {
+            const { data } = await this.api.post(`/trackers/create`, {
                 browser: navigator.userAgent,
                 screen: {
                     width: document.documentElement.clientWidth,
@@ -59,9 +58,11 @@ class Tracker {
                 url: window.location.href,
                 additional_info: []
             });
-            this.#trackUuid = response.data.data.uuid;
+
+            this.#trackUuid = data.data.uuid;
             this.#accessible.apiReady = true;
-            this.#flushQueue();
+            this.#trackerBatchEventsApi();
+
         } catch (error) {
             console.error('Failed to create tracker:', error);
         }
@@ -72,7 +73,7 @@ class Tracker {
      * @param {Object} data - The event data to be tracked.
      */
     async #trackerWebSocket(data) {
-        if (!this.#accessible.apiReady || !this.#accessible.wsReady || !this.#accessible.startDelayComplete) {
+        if (!this.#accessible.apiReady || !this.#accessible.startDelayComplete) {
             this.#eventQueue.push(data);
             return;
         }
@@ -87,14 +88,20 @@ class Tracker {
             console.error('Failed to send WebSocket message:', error);
         }
     }
+    
+    async #trackerBatchEventsApi() {
+        if (!this.#accessible.startDelayComplete) {
+            return;
+        }
 
-    /**
-     * Flushes the event queue by sending all queued events.
-     */
-    #flushQueue() {
-        while (this.#eventQueue.length > 0) {
-            const event = this.#eventQueue.shift();
-            this.#trackerWebSocket(event);
+        try {
+            this.api.post(`/trackers/${this.#trackUuid}/events`, {
+                data: this.#eventQueue
+            });
+            
+            this.#eventQueue = [];
+        } catch (error) {
+            console.error('Failed to send API message:', error);
         }
     }
 }
