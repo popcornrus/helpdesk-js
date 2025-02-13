@@ -2,4 +2,4 @@
 
 build:
 	@echo "Building with esbuild"
-	@node esbuild.config.ts
+	@node esbuild.config.mjs
