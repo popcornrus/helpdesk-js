@@ -2,6 +2,10 @@ import {ModuleConnectorInterface, ModuleInterface} from "$core/module";
 
 export default class Compose {
     modules: Modules = new Modules();
+
+    get Modules(): Modules {
+        return this.modules;
+    }
 }
 
 class Modules {

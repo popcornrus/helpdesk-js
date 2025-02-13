@@ -15,6 +15,6 @@ export default class HttpModule
             throw new Error(`Config is required`);
         }
 
-        this.actions = new HttpController(config.BaseUrl, config.Token);
+        this.actions = new HttpController(config.url, config.Token);
     }
 }

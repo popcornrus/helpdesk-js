@@ -3,6 +3,9 @@
     "baseUrl": "./",
     "target": "es6",
     "module": "commonjs",
+    "outDir": "./dist",
+    "declaration": true, // Required for emitDeclarationOnly
+    "emitDeclarationOnly": true, // Generates only .d.ts files
     "moduleResolution": "node",
     "strict": false,
     "esModuleInterop": true,
@@ -10,15 +13,16 @@
     "allowImportingTsExtensions": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "$src/*": ["src/*"],
-      "$utils/*": ["src/utils/*"],
-      "$interfaces/*": ["src/interfaces/*"],
-      "$configs/*": ["src/configs/*"],
-      "$enums/*": ["src/enums/*"],
-      "$core/*": ["src/core/*"],
+      "$src/*": ["./src/*"],
+      "$utils/*": ["./src/utils/*"],
+      "$interfaces/*": ["./src/interfaces/*"],
+      "$configs/*": ["./src/configs/*"],
+      "$enums/*": ["./src/enums/*"],
+      "$core/*": ["./src/core/*"],
 
-      "$httpModule/*": ["src/modules/http/*"],
-      "$websocketModule/*": ["src/modules/websocket/*"]
+      "$httpModule/*": ["./src/modules/http/*"],
+      "$websocketModule/*": ["./src/modules/websocket/*"],
+      "$esbuild/*": ["node_modules/esbuild/*"]
     }
   },
   "types": [

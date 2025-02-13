@@ -1,10 +1,8 @@
-import ModuleConnector from "./connector";
 import {
     ModuleConnectorInterface
 } from "./connector/interface";
 
 export {
-    ModuleConnector,
     ModuleConnectorInterface
 }
 

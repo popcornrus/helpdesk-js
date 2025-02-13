@@ -1,5 +1,5 @@
-.PHONY: tsconfig-paths
+.PHONY: build
 
-tsconfig-paths:
-	@echo "Executing .bin/paths.tsconfig.mjs"
-	@node .bin/paths.tsconfig.mjs
+build:
+	@echo "Building with esbuild"
+	@node esbuild.config.ts

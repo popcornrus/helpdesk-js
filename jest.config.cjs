@@ -11,6 +11,6 @@ module.exports = {
   testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'],
   transformIgnorePatterns: ['<rootDir>/node_modules/'],
   roots: ['<rootDir>'],
-  modulePaths: [compilerOptions.baseUrl],
+  modulePaths: [compilerOptions.url],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
 };

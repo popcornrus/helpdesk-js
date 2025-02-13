@@ -1,6 +1,6 @@
 import {ConfigInterface} from "$core/module";
 
 export interface HttpConfig extends ConfigInterface {
-    BaseUrl: string;
+    url: string;
     Token: string;
 }

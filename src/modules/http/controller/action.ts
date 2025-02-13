@@ -4,32 +4,40 @@ export default class HttpController
     implements ModuleControllerInterface {
 
     #token: string;
-    #baseUrl: string;
+    #url: string;
 
     constructor(
-        baseUrl: string,
+        url: string,
         token: string,
     ) {
-        this.#token = token;
-        this.#baseUrl = baseUrl;
+        if (!url) {
+            throw new Error("Base URL is required");
+        }
 
-        this.#validateToken();
+        if (!token) {
+            throw new Error("Token is required");
+        }
+
+        this.#token = token;
+        this.#url = url;
+
+        this.validateToken("http").then(r => {
+            throw new Error("Token is invalid");
+        });
     }
 
-    #validateToken() {
+    async validateToken(type: string): Promise<any> {
         if (!this.#token) {
             throw new Error("Token is required");
         }
 
-        fetch(`${this.#baseUrl}/validate`, {
+        await fetch(`${this.#url}/validate/${type}`, {
             headers: {
                 Authorization: `Bearer ${this.#token}`,
             },
             method: "POST",
         }).then((response) => {
-            if (response.status !== 200) {
-                throw new Error("Invalid token");
-            }
+            return response
         })
     }
 }
