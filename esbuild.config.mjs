@@ -21,19 +21,6 @@ const getFiles = (dir, fileList = []) => {
     return fileList;
 };
 
-const createDistStructure = (srcDir, distDir) => {
-    const files = getFiles(srcDir);
-    files.forEach(file => {
-        const relativePath = path.relative(srcDir, file);
-        const distPath = path.join(distDir, relativePath);
-        const distDirPath = path.dirname(distPath);
-        if (!fs.existsSync(distDirPath)) {
-            fs.mkdirSync(distDirPath, { recursive: true });
-        }
-        fs.copyFileSync(file, distPath);
-    });
-};
-
 build({
     entryPoints: ['src/index.ts'],
     bundle: true, // No bundling to preserve file structure
@@ -42,13 +29,7 @@ build({
     platform: 'node',
     target: 'es6',
     plugins: [TsconfigPathsPlugin({tsconfig: 'tsconfig.json'})],
-    alias: {
-        $config: path.resolve(__dirname, './src/configs'),
-        $modules: path.resolve(__dirname, './src/modules'),
-        $types: path.resolve(__dirname, './src/types'),
-        $interfaces: path.resolve(__dirname, './src/interfaces'),
-        '$modules/tracker': path.resolve(__dirname, './src/modules/tracker.json'),
-        '$modules/api': path.resolve(__dirname, './src/modules/api')
-    },
+    minify: true,
+    sourcemap: true
 }).then(() => {
 }).catch(() => process.exit(1));

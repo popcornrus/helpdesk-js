@@ -6,10 +6,11 @@
   "module": "dist/index.js",
   "scripts": {
     "test": "jest",
-    "build": "npx esbuild src/**/*.ts --outdir=dist --platform=node --target=esnext --sourcemap\n"
+    "build": "node esbuild.config.mjs"
   },
   "files": [
-    "dist/index.js"
+    "dist/index.js",
+    "dist"
   ],
   "publishConfig": {
     "access": "public"
@@ -19,7 +20,8 @@
     "url": "git+https://github.com/popcodrnrus/helpdesk-js.git"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./dist/*": "./dist/*"
   },
   "imports": {},
   "keywords": [
