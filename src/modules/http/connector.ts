@@ -1,21 +1,17 @@
-import {ModuleConnectorInterface, ModuleInterface} from "$core/module";
+import {ConfigInterface, ModuleInterface} from "$core/module";
 import {HttpConfig} from "$httpModule/types.ts";
+import {ModuleBase} from "$core/module/instance";
+import {ModuleBaseConnector} from "$core/module/connector";
 import HttpModule from "$httpModule/controller/module.ts";
+import {ControllerDI} from "$src/modules";
 
-export default class HttpConnector implements ModuleConnectorInterface{
-    config: HttpConfig | null = null;
+export default class HttpConnector
+    extends ModuleBaseConnector {
+    config: HttpConfig;
     instance: ModuleInterface | null = null;
 
-    SetConfig(config: HttpConfig) {
-        this.config = config;
-    }
-
-    GetConfig(): HttpConfig {
-        return this.config;
-    }
-
-    connect() {
-        this.instance = new HttpModule(this.config);
+    Connect(di: ControllerDI, config: ConfigInterface) {
+        this.instance = new HttpModule(di, <HttpConfig>config);
     }
 
     GetConfigType(): string {
@@ -26,7 +22,7 @@ export default class HttpConnector implements ModuleConnectorInterface{
         return "Http";
     }
 
-    GetInstance(): ModuleInterface {
+    GetInstance(): ModuleBase {
         return this.instance;
     }
 }

@@ -1,4 +1,10 @@
 import {ModuleControllerInterface, ModuleInterface} from "./interface"
-export default class Module implements ModuleInterface {
-    controller: ModuleControllerInterface | null;
+import {ControllerDI} from "$src/modules";
+
+export class ModuleBase
+    implements ModuleInterface {
+}
+
+export class ModuleBaseController
+    implements ModuleControllerInterface {
 }

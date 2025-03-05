@@ -6,14 +6,14 @@ export {
     ModuleConnectorInterface
 }
 
-import Module from "$core/module/instance";
+import {ModuleBase} from "$core/module/instance";
 import {
     ModuleInterface,
     ModuleControllerInterface
 } from "./instance/interface";
 
 export {
-    Module,
+    ModuleBase,
     ModuleInterface,
     ModuleControllerInterface
 }

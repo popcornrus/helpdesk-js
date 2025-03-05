@@ -1,5 +1,5 @@
-const { pathsToModuleNameMapper } = require('ts-jest')
-const { compilerOptions } = require('./tsconfig')
+const { pathsToModuleNameMapper } = require('ts-jest');
+const { compilerOptions } = require('./tsconfig');
 
 module.exports = {
   preset: 'ts-jest',
@@ -11,6 +11,8 @@ module.exports = {
   testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'],
   transformIgnorePatterns: ['<rootDir>/node_modules/'],
   roots: ['<rootDir>'],
-  modulePaths: [compilerOptions.url],
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
+  modulePaths: [compilerOptions.baseUrl || '<rootDir>'],
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths || {}, {
+    prefix: '<rootDir>/',
+  }),
 };

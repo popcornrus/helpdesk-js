@@ -1,5 +1,7 @@
+import {ControllerDI} from "$src/modules";
+
 export interface ModuleInterface {
-    controller: ModuleControllerInterface | null;
 }
 
-export interface ModuleControllerInterface {}
+export interface ModuleControllerInterface {
+}

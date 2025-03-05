@@ -1,5 +1,13 @@
-import HttpConnector from '$httpModule/connector';
+import {ModuleInterface} from "$core/module";
 
-export default {
-    Http: new HttpConnector()
-};
+export class ControllerDI {
+    #modules: Map<string, ModuleInterface> = new Map();
+
+    SetModule(key: string, module: ModuleInterface): void {
+        this.#modules.set(key, module);
+    }
+
+    GetModule<T>(key: string): T {
+        return this.#modules.get(key) as T;
+    }
+}

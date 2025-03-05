@@ -1,20 +1,20 @@
-import {Module, ModuleControllerInterface, ModuleInterface} from "$core/module";
-import HttpController from "$httpModule/controller/action";
+import HttpController from "$httpModule/controller/service.ts";
 import {HttpConfig} from "$httpModule/types.ts";
+import {ModuleBase} from "$core/module/instance";
+import {ControllerDI} from "$src/modules";
 
 export default class HttpModule
-    extends Module
-    implements ModuleInterface {
+    extends ModuleBase {
 
-    actions: ModuleControllerInterface;
+    actions: HttpController;
 
-    constructor(config: HttpConfig) {
+    constructor(di: ControllerDI, config: HttpConfig) {
         super();
 
         if (config === null) {
             throw new Error(`Config is required`);
         }
 
-        this.actions = new HttpController(config.url, config.Token);
+        this.actions = new HttpController(di, config);
     }
 }

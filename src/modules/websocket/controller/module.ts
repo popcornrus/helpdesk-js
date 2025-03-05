@@ -1,20 +1,20 @@
-import {Module, ModuleControllerInterface, ModuleInterface} from "$core/module";
+import {ModuleBase} from "$core/module";
 import {WebsocketConfig} from "$websocketModule/types.ts";
-import WebsocketController from "$websocketModule/controller/action.ts";
+import WebsocketController from "$websocketModule/controller/service.ts";
+import {ControllerDI} from "$src/modules";
 
 export default class WebsocketModule
-    extends Module
-    implements ModuleInterface {
+    extends ModuleBase {
 
-    actions: ModuleControllerInterface;
+    actions: WebsocketController;
 
-    constructor(config: WebsocketConfig) {
+    constructor(di: ControllerDI, config: WebsocketConfig) {
         super();
 
         if (config === null) {
             throw new Error(`Config is required`);
         }
 
-        this.actions = new WebsocketController(config.url, config.Token);
+        this.actions = new WebsocketController(di, config);
     }
 }

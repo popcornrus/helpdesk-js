@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "target": "es6",
+    "target": "esnext",
     "module": "commonjs",
     "outDir": "./dist",
-    "declaration": true, // Required for emitDeclarationOnly
+    "declaration": true,
     "moduleResolution": "node",
     "strict": false,
     "esModuleInterop": true,
@@ -12,26 +12,19 @@
     "allowImportingTsExtensions": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "$src/*": ["./src/*"],
-      "$utils/*": ["./src/utils/*"],
-      "$interfaces/*": ["./src/interfaces/*"],
-      "$configs/*": ["./src/configs/*"],
-      "$enums/*": ["./src/enums/*"],
-      "$core/*": ["./src/core/*"],
+      "$src/*": ["src/*"],
+      "$utils/*": ["src/utils/*"],
+      "$interfaces/*": ["src/interfaces/*"],
+      "$configs/*": ["src/configs/*"],
+      "$enums/*": ["src/enums/*"],
+      "$core/*": ["src/core/*"],
 
-      "$httpModule/*": ["./src/modules/http/*"],
-      "$websocketModule/*": ["./src/modules/websocket/*"],
-      "$esbuild/*": ["node_modules/esbuild/*"]
+      "$httpModule/*": ["src/modules/http/*"],
+      "$websocketModule/*": ["src/modules/websocket/*"],
+      "$trackerModule/*": ["src/modules/tracker/*"]
     }
   },
-  "types": [
-    "@types/jest"
-  ],
-  "include": [
-    "src/**/*.ts",
-    "tests/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "types": ["@types/jest"],
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["node_modules"]
 }

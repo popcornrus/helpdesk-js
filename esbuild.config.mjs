@@ -26,10 +26,9 @@ build({
     bundle: true, // No bundling to preserve file structure
     outdir: 'dist',
     outbase: 'src', // Preserve the directory structure based on "src"
-    platform: 'node',
-    target: 'es6',
+    platform: 'neutral',
+    target: 'esnext',
     plugins: [TsconfigPathsPlugin({tsconfig: 'tsconfig.json'})],
-    minify: true,
     sourcemap: true
 }).then(() => {
 }).catch(() => process.exit(1));

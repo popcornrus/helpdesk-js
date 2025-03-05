@@ -1,14 +1,13 @@
 import {ConfigInterface, ModuleInterface} from "$core/module";
+import {ControllerDI} from "$src/modules";
 
 export interface ModuleConnectorInterface {
     instance : ModuleInterface | null;
 
-    connect: () => void;
-
-    SetConfig: (config: unknown) => void;
-    GetConfig: () => ConfigInterface;
-    GetConfigType: () => string;
+    Connect: (di: ControllerDI, config: ConfigInterface) => void;
 
     GetTitle: () => string;
     GetInstance: () => ModuleInterface;
+
+    GetConfigType: () => string;
 }

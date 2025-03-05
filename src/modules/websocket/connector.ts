@@ -1,21 +1,16 @@
-import {ModuleConnectorInterface, ModuleInterface} from "$core/module";
+import {ConfigInterface, ModuleBase, ModuleConnectorInterface} from "$core/module";
 import WebsocketModule from "$websocketModule/controller/module";
 import {WebsocketConfig} from "$websocketModule/types";
+import {ModuleBaseConnector} from "$core/module/connector";
+import {ControllerDI} from "$src/modules";
 
-export default class WebsocketConnector implements ModuleConnectorInterface{
+export default class WebsocketConnector
+    extends ModuleBaseConnector {
     config: WebsocketConfig | null = null;
-    instance: ModuleInterface | null = null;
+    instance: ModuleBase | null = null;
 
-    SetConfig(config: WebsocketConfig) {
-        this.config = config;
-    }
-
-    GetConfig(): WebsocketConfig {
-        return this.config;
-    }
-
-    connect() {
-        this.instance = new WebsocketModule(this.config);
+    Connect(di: ControllerDI, config: ConfigInterface): void {
+        this.instance = new WebsocketModule(di, <WebsocketConfig>config);
     }
 
     GetConfigType(): string {
@@ -26,7 +21,7 @@ export default class WebsocketConnector implements ModuleConnectorInterface{
         return "Websocket";
     }
 
-    GetInstance(): ModuleInterface {
+    GetInstance(): ModuleBase {
         return this.instance;
     }
 }
